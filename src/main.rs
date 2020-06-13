@@ -6,9 +6,8 @@ use std::process::{Child, Command, Stdio};
 fn main() {
     loop {
         // need to explicitly flush this to ensure it prints before read_line
-        let curr_dir_result = env::current_dir();
         let curr_dir;
-        match curr_dir_result {
+        match env::current_dir() {
             Ok(res) => {
                 curr_dir = res.as_path().display().to_string();
             }
@@ -17,8 +16,7 @@ fn main() {
             }
         }
         print!("ferris: {} > ", curr_dir);
-        let flush_result = stdout().flush();
-        match flush_result {
+        match stdout().flush() {
             Ok(_) => {}
             Err(err) => {
                 eprintln!("An error occured: {}", err);
@@ -26,8 +24,7 @@ fn main() {
         }
 
         let mut input = String::new();
-        let read_line_result = stdin().read_line(&mut input);
-        match read_line_result {
+        match stdin().read_line(&mut input) {
             Ok(_) => {}
             Err(err) => {
                 eprintln!("An error occured: {}", err);
@@ -43,9 +40,8 @@ fn main() {
             // everything after the first whitespace character
             //     is interpreted as args to the command
             let mut parts = command.trim().split_whitespace();
-            let command_result = parts.next();
             let command;
-            match command_result {
+            match parts.next() {
                 Some(res) => {
                     command = res;
                 }
@@ -69,10 +65,9 @@ fn main() {
                 "exit" => return,
                 command => {
                     let stdin = previous_command.map_or(Stdio::inherit(), |output: Child| {
-                        let stdout_result = output.stdout;
-                        match stdout_result {
-                            Some(result) => {
-                                return Stdio::from(result);
+                        match output.stdout {
+                            Some(res) => {
+                                return Stdio::from(res);
                             }
                             None => {
                                 panic!("Could not get stdio");
@@ -111,8 +106,7 @@ fn main() {
 
         if let Some(mut final_command) = previous_command {
             // block until the final command has finished
-            let final_command_result = final_command.wait();
-            match final_command_result {
+            match final_command.wait() {
                 Ok(_) => {}
                 Err(err) => {
                     eprintln!("An error occured: {}", err);
