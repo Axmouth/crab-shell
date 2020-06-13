@@ -5,7 +5,6 @@ use std::process::{Child, Command, Stdio};
 
 fn main() {
     loop {
-        // use the `>` character as the prompt
         // need to explicitly flush this to ensure it prints before read_line
         let curr_dir_result = env::current_dir();
         let curr_dir;
@@ -22,7 +21,7 @@ fn main() {
         match flush_result {
             Ok(_) => {}
             Err(err) => {
-                println!("An error occured: {}", err);
+                eprintln!("An error occured: {}", err);
             }
         }
 
@@ -116,7 +115,7 @@ fn main() {
             match final_command_result {
                 Ok(_) => {}
                 Err(err) => {
-                    println!("An error occured: {}", err);
+                    eprintln!("An error occured: {}", err);
                 }
             }
         }
